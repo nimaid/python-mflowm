@@ -5,4 +5,4 @@ __version__ = "0.1.0"
 from mflowm.files import VideoReader
 from mflowm.flow import MotionFlowMulti, CompositeMode
 from mflowm.layer import LayerMode, layer_images
-from mflowm.scripts import convert_video, run
+from mflowm.scripts import convert_video

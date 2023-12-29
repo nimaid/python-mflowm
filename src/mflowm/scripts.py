@@ -3,7 +3,7 @@ import sys
 import cv2
 import argparse
 
-import mflowm
+from mflowm import __doc__ as DESCRIPTION
 from mflowm.helpers import file_path
 from mflowm import MotionFlowMulti, CompositeMode, VideoReader
 
@@ -15,11 +15,13 @@ def convert_video(
         fade_speed: float | None = 2,
         windows_balance: bool = False,
         pre_scale: float = 1,
+        output_scale: float = 1,
         display_scale: float = 1,
-        scale_method=cv2.INTER_NEAREST
+        scale_method: int = cv2.INTER_NEAREST,
+        filename_suffix: str = "_flow"
 ):
     # Create the VideoReader
-    video_reader = VideoReader(filename, scale=pre_scale)
+    video_reader = VideoReader(filename, scale=pre_scale, scale_method=scale_method)
 
     # Create the MotionFlowMulti object
     mfm = MotionFlowMulti(
@@ -31,17 +33,18 @@ def convert_video(
     )
 
     mfm.convert_to_file(
-        output_scale=(1 / pre_scale),
-        display_scale=(1 / pre_scale) * display_scale,
+        output_scale=output_scale,
+        display_scale=display_scale,
         output_scale_method=scale_method,
-        display_scale_method=scale_method
+        display_scale_method=scale_method,
+        filename_suffix=filename_suffix
     )
 
 
 # Parse arguments
 def parse_args(args):
     parser = argparse.ArgumentParser(
-        description=f"{mflowm.__doc__}\n\n"
+        description=f"{DESCRIPTION}\n\n"
                     f"Valid parameters are shown in {{braces}}\n"
                     f"Default parameters are shown in [brackets].",
         formatter_class=argparse.RawDescriptionHelpFormatter
@@ -62,38 +65,58 @@ def parse_args(args):
     )
 
     parser.add_argument(
-        "-t", "--trails", dest="deaw_trails",
+        "-t", "--trails", dest="draw_trails",
         type=bool, required=False, default=False,
         help=f"if we should draw trails or not [{False}]"
     )
 
+    parser.add_argument(
+        "-f", "--fade", dest="fade_speed",
+        type=float, required=False, default=2,
+        help=f"the fade speed to use for the trails (0 to disable) [{2}]"
+    )
 
+    parser.add_argument(
+        "-b", "--balance-windows", dest="do_balancing",
+        type=bool, required=False, default=False,
+        help=f"if the flow windows should be averaged in brightness (makes the motion darker) [{False}]"
+    )
 
+    parser.add_argument(
+        "-p", "--pre-scale", dest="prescale",
+        type=float, required=False, default=1,
+        help=f"the factor to pre-scale the video by (less than 1 makes it lower resolution) [{1}]"
+    )
 
+    parser.add_argument(
+        "-o", "--output-scale", dest="output_scale",
+        type=float, required=False, default=1,
+        help=f"the factor to scale the output by [{1}]"
+    )
 
-    parser.add_argument("-1", "--first", dest="first_arg", type=float, required=True,
-                        help="the first argument"
-                        )
+    parser.add_argument(
+        "-d", "--display-scale", dest="display_scale",
+        type=float, required=False, default=1,
+        help=f"the factor to scale the display by [{1}]"
+    )
 
-    parser.add_argument("-2", "--second", dest="second_arg", type=float, required=False, default=1.0,
-                        help="the second argument [{default}]".format(
-                            default=DEFAULTS["second"])
-                        )
-
-    parser.add_argument("-o", "--operation", dest="opcode", type=str, required=False, default="+",
-                        help="the operation to perform on the arguments, either {{{values}}} [{default}]".format(
-                            values=", ".join([x.value for x in OpCode]),
-                        default=DEFAULTS["opcode"].value)
-                        )
+    parser.add_argument(
+        "-s", "--suffix", dest="output_suffix",
+        type=str, required=False, default="_flow",
+        help="the suffix to use for the output filename [_flow]"
+    )
 
     parsed_args = parser.parse_args(args)
 
     # Interpret string arguments
-    if parsed_args.opcode is not None:
-        if parsed_args.opcode in [x.value for x in OpCode]:
-            parsed_args.opcode = OpCode(parsed_args.opcode)
-        else:
-            parser.error(f"\"{parsed_args.opcode}\" is not a valid opcode")
+    if parsed_args.mode in [x.name for x in CompositeMode]:
+        parsed_args.mode = CompositeMode[parsed_args.mode]
+    else:
+        parser.error(f"\"{parsed_args.mode}\" is not a valid mode")
+
+    # Correct values
+    if parsed_args.fade_speed <= 0:
+        parsed_args.fade_speed = None
 
     return parsed_args
 
@@ -101,7 +124,17 @@ def parse_args(args):
 def main(args):
     parsed_args = parse_args(args)
 
-
+    convert_video(
+        filename=parsed_args.video_file,
+        mode=parsed_args.mode,
+        trails=parsed_args.draw_trails,
+        fade_speed=parsed_args.fade_speed,
+        windows_balance=parsed_args.do_balancing,
+        pre_scale=parsed_args.prescale,
+        output_scale=parsed_args.output_scale,
+        display_scale=parsed_args.display_scale,
+        filename_suffix=parsed_args.output_suffix
+    )
 
 
 def run():

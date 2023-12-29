@@ -27,4 +27,4 @@ documentation = "https://mflowm.readthedocs.io/en/latest/index.html"
 issues = "https://github.com/nimaid/python-mflowm/issues"
 
 [project.scripts]
-mflowm = "mflowm:run"
+mflowm = "mflowm.scripts:run"
