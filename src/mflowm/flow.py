@@ -276,7 +276,7 @@ class MotionFlowMulti:
         # Play the video
         user_stopped = False
         final_video_frame = None
-        for i in EtaBar(range(self.video_file.total_frames - 1), bar_format="{l_bar}{bar}{r_barL}"):
+        for i in EtaBar(range(self.video_file.total_frames - 1)):
             try:
                 final_frame = self.get_next_frame()
                 # This means it could not read the frame (should never happen)
