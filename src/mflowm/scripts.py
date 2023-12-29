@@ -2,10 +2,26 @@ import sys
 
 import cv2
 import argparse
+from enum import Enum
 
 from mflowm import __doc__ as DESCRIPTION
 from mflowm.helpers import file_path
 from mflowm import MotionFlowMulti, CompositeMode, VideoReader
+
+
+class ScaleMethods(Enum):
+    AREA = cv2.INTER_AREA
+    BITS = cv2.INTER_BITS
+    BITS2 = cv2.INTER_BITS2
+    CUBIC = cv2.INTER_CUBIC
+    LANCZOS4 = cv2.INTER_LANCZOS4
+    LINEAR = cv2.INTER_LINEAR
+    LINEAR_EXACT = cv2.INTER_LINEAR_EXACT
+    MAX = cv2.INTER_MAX
+    NEAREST = cv2.INTER_NEAREST
+    NEAREST_EXACT = cv2.INTER_NEAREST_EXACT
+    TAB_SIZE = cv2.INTER_TAB_SIZE
+    TAB_SIZE2 = cv2.INTER_TAB_SIZE2
 
 
 def convert_video(
@@ -101,6 +117,15 @@ def parse_args(args):
     )
 
     parser.add_argument(
+        "-sm", "--scale-method", dest="method",
+        type=str, required=False, default=ScaleMethods.NEAREST.name,
+        help="the composite mode to use {{{values}}} [{default}]".format(
+            values=", ".join([x.name for x in ScaleMethods]),
+            default=ScaleMethods.NEAREST.name
+        )
+    )
+
+    parser.add_argument(
         "-s", "--suffix", dest="output_suffix",
         type=str, required=False, default="_flow",
         help="the suffix to use for the output filename [_flow]"
@@ -113,6 +138,11 @@ def parse_args(args):
         parsed_args.mode = CompositeMode[parsed_args.mode]
     else:
         parser.error(f"\"{parsed_args.mode}\" is not a valid mode")
+
+    if parsed_args.method in [x.name for x in ScaleMethods]:
+        parsed_args.method = ScaleMethods[parsed_args.method]
+    else:
+        parser.error(f"\"{parsed_args.method}\" is not a valid scale method")
 
     # Correct values
     if parsed_args.fade_speed <= 0:
@@ -133,6 +163,7 @@ def main(args):
         pre_scale=parsed_args.prescale,
         output_scale=parsed_args.output_scale,
         display_scale=parsed_args.display_scale,
+        scale_method=parsed_args.method.value,
         filename_suffix=parsed_args.output_suffix
     )
 
