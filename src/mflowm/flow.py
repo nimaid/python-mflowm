@@ -282,9 +282,6 @@ class MotionFlowMulti:
                 # This means it could not read the frame (should never happen)
                 if final_frame is None:
                     logging.warning("Could not read the frame, video is likely over.")
-                    cv2.destroyWindow(window_name)
-                    self.video_file.close()
-                    new_video.release()
                     break
 
                 # Display frame
@@ -316,9 +313,10 @@ class MotionFlowMulti:
             if stop_playing:
                 logging.warning("Closing video and exiting...")
                 user_stopped = True
-                cv2.destroyWindow(window_name)
-                self.video_file.close()
                 break
+
+        cv2.destroyWindow(window_name)
+        self.video_file.close()
 
         # Add fade frames and keep fading until it is fully black
         if fade_to_black:
