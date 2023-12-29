@@ -29,6 +29,7 @@ def convert_video(
         mode: CompositeMode,
         trails: bool = False,
         fade_speed: float | None = 2,
+        fade_out: bool = True,
         windows_balance: bool = False,
         pre_scale: float = 1,
         output_scale: float = 1,
@@ -53,7 +54,8 @@ def convert_video(
         display_scale=display_scale,
         output_scale_method=scale_method,
         display_scale_method=scale_method,
-        filename_suffix=filename_suffix
+        filename_suffix=filename_suffix,
+        fade_to_black=fade_out
     )
 
 
@@ -90,6 +92,12 @@ def parse_args(args):
         "-f", "--fade", dest="fade_speed",
         type=float, required=False, default=2,
         help=f"the fade speed to use for the trails (0 to disable) [{2}]"
+    )
+
+    parser.add_argument(
+        "-fo", "--fade-out", dest="do_fade_out",
+        type=bool, required=False, default=True,
+        help=f"if we should fade to black at the end [{True}]"
     )
 
     parser.add_argument(
@@ -159,6 +167,7 @@ def main(args):
         mode=parsed_args.mode,
         trails=parsed_args.draw_trails,
         fade_speed=parsed_args.fade_speed,
+        fade_out=parsed_args.do_fade_out,
         windows_balance=parsed_args.do_balancing,
         pre_scale=parsed_args.prescale,
         output_scale=parsed_args.output_scale,

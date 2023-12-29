@@ -1,6 +1,6 @@
 """MotionFlowMulti - A multi-resolution colorful motion detection video filter."""
 
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 
 from mflowm.files import VideoReader
 from mflowm.flow import MotionFlowMulti, CompositeMode
