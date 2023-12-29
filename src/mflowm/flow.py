@@ -218,12 +218,9 @@ class MotionFlowMulti:
 
         # Layer the motion over the source
         match self.mode:
-            case CompositeMode.GLITCH:
-                layered_frame = layer_images(self.src_frame, motion_frame, LayerMode.DIFFERENCE)
-                final_frame = layer_images(layered_frame, motion_frame, LayerMode.INVERT_CLIP)
             case CompositeMode.SIMPLE:
                 final_frame = layer_images(self.src_frame, motion_frame, LayerMode.DIFFERENCE)
-            case CompositeMode.BROKEN_A | CompositeMode.BROKEN_B:
+            case CompositeMode.GLITCH | CompositeMode.BROKEN_A | CompositeMode.BROKEN_B:
                 final_frame = layer_images(self.src_frame, motion_frame, LayerMode.INVERT_CLIP)
             case _:
                 final_frame = motion_frame  # No layering (only motion)
