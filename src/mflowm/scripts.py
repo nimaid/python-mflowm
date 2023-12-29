@@ -145,12 +145,14 @@ def parse_args(args):
     if parsed_args.mode in [x.name for x in CompositeMode]:
         parsed_args.mode = CompositeMode[parsed_args.mode]
     else:
-        parser.error(f"\"{parsed_args.mode}\" is not a valid mode ({", ".join([x.name for x in CompositeMode])})")
+        valid_modes = ", ".join([x.name for x in CompositeMode])
+        parser.error(f"\"{parsed_args.mode}\" is not a valid mode ({valid_modes})")
 
     if parsed_args.method in [x.name for x in ScaleMethods]:
         parsed_args.method = ScaleMethods[parsed_args.method]
     else:
-        parser.error(f"\"{parsed_args.method}\" is not a valid scale method ({", ".join([x.name for x in ScaleMethods])})")
+        valid_methods = ", ".join([x.name for x in ScaleMethods])
+        parser.error(f"\"{parsed_args.method}\" is not a valid scale method ({valid_methods})")
 
     # Correct values
     if parsed_args.fade_speed <= 0:

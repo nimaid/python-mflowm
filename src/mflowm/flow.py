@@ -191,7 +191,6 @@ class MotionFlowMulti:
                 motion_frame_bg = self._fade_img(old_frame, bad_fade=bad_fade)
             else:
                 motion_frame_bg = old_frame
-            # Add over last motion frame by blending with lighten
             layered_motion_frame = layer_images(motion_frame, motion_frame_bg, LayerMode.CLIP)
 
         self.motion_frame = layered_motion_frame
