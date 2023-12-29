@@ -1,4 +1,4 @@
-{[simple_name]} Documentation
+MotionFlowMulti Documentation
 ===================================
 
 .. toctree::

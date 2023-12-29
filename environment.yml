@@ -1,0 +1,13 @@
+name: mflowm
+channels:
+  - defaults
+dependencies:
+  - python>=3.10*
+  - pip
+  - ffmpeg
+  - pip:
+    - numpy
+    - opencv-python
+    - blend_modes
+    - ffmpeg-python
+    - etatime>=3.0.0

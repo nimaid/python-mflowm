@@ -1,0 +1,2 @@
+include src/mflowm/*.yml src/mflowm/*.py
+graft src/mflowm/resources
