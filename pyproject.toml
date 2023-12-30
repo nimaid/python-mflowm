@@ -17,7 +17,7 @@ dependencies = [
     "opencv-python",
     "blend_modes",
     "ffmpeg-python",
-    "etatime>=3.0.0"
+    "etatime>=3.3.0"
 ]
 
 [project.urls]
