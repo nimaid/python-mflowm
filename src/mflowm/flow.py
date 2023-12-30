@@ -323,7 +323,7 @@ class MotionFlowMulti:
                 while np.sum(final_video_frame, axis=None) != 0:  # While the last frame isn't completely black
                     try:
                         logging.info(f"Fade frame {fade_frames + 1}")
-                        if self.fade_amt < 1 and self.mode not in [CompositeMode.BROKEN_A, CompositeMode.BROKEN_B]:
+                        if self.fade_amt < 1:
                             final_video_frame = self._fade_img(final_video_frame, fade_amt=1)
                         else:
                             final_video_frame = self._fade_img(final_video_frame)
