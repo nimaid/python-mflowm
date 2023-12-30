@@ -84,8 +84,8 @@ def parse_args(args):
 
     parser.add_argument(
         "-t", "--trails", dest="draw_trails",
-        type=bool, required=False, default=False,
-        help=f"if we should draw trails or not [{False}]"
+        required=False, action="store_true",
+        help=f"if we should draw trails"
     )
 
     parser.add_argument(
@@ -96,14 +96,14 @@ def parse_args(args):
 
     parser.add_argument(
         "-fo", "--fade-out", dest="do_fade_out",
-        type=bool, required=False, default=True,
-        help=f"if we should fade to black at the end [{True}]"
+        required=False, action="store_true",
+        help=f"if we should fade to black at the end"
     )
 
     parser.add_argument(
         "-b", "--balance-windows", dest="do_balancing",
-        type=bool, required=False, default=False,
-        help=f"if the flow windows should be averaged in brightness (makes the motion darker) [{False}]"
+        required=False, action="store_true",
+        help=f"if the flow windows should be averaged in brightness (makes the motion darker)]"
     )
 
     parser.add_argument(

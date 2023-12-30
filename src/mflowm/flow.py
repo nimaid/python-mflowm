@@ -1,4 +1,5 @@
 import os
+import shutil
 import cv2
 import logging
 import numpy as np
@@ -343,11 +344,15 @@ class MotionFlowMulti:
             return
 
         # Mux original audio and new video together (lossless, copy streams)
-        logging.info("Adding audio...")
-        audio_original = ffmpeg.input(self.video_file.filename).audio
-        video_new = ffmpeg.input(temp_filename).video
-        video_muxed = ffmpeg.output(audio_original, video_new, filename, vcodec='copy', acodec='copy')
-        ffmpeg_result = video_muxed.run()
+        if ffmpeg.probe(self.video_file.filename, select_streams='a')["streams"]:
+            logging.info("Adding audio...")
+            audio_original = ffmpeg.input(self.video_file.filename).audio
+            video_new = ffmpeg.input(temp_filename).video
+            video_muxed = ffmpeg.output(audio_original, video_new, filename, vcodec='copy', acodec='copy')
+            ffmpeg_result = video_muxed.run()
+        else:
+            shutil.copy(temp_filename, filename)
+
         if os.path.exists(filename):
             os.remove(temp_filename)  # Delete the temp file
         logging.info("Done converting video!")
